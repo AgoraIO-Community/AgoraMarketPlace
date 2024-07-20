@@ -10,6 +10,7 @@
 - <mark>最低兼容 Android 5.0</mark>（SDK API Level 21）
 - Flutter SDK 2.10及以上版本。
 - Android 5.0 及以上的真机设备。
+- IOS 11.0级以上的真机设备。
 
 ---
 
@@ -42,7 +43,7 @@
 
 ##### 2.4 将相芯美颜需要的资源文件拷贝到项目的 [**Resource/**](Resource/) 目录下
 
-* [点击此处下载demo需要的资源文件包](https://download.agora.io/marketplace/release/FaceUnity_v8.6.1_Resources.zip)
+* [点击此处下载demo需要的资源文件包](https://download.agora.io/marketplace/release/Agora_Marketplace_FaceUnity_v8.11.0_Resource.zip)
 
 ![xxx](https://web-cdn.agora.io/docs-files/1673335775613)
 
@@ -52,13 +53,14 @@
 
 ##### 2.6 下载插件 android-release.aar 文件, 并拷贝到项目 [**android/libs/**](android/libs/) 目录下
 
-* [点击此处下载demo需要的插件aar](https://download.agora.io/marketplace/release/Agora_Marketplace_FaceUnity_v8.6.0_Extension_for_Android_v4.1.1.zip)
+* [点击此处下载demo需要的Android插件aar](https://download.agora.io/marketplace/release/Agora_Marketplace_FaceUnity_v8.11.0_Extension_for_Android_v4.3.2-1.tar.gz)
+* [点击此处下载demo需要的IOS插件framework](https://download.agora.io/marketplace/release/Agora_Marketplace_FaceUnity_v8.11.0_Extension_for_iOS_v4.3.2-1.tar.gz)
 
 
 
 <img src="https://web-cdn.agora.io/docs-files/1673335651833" alt="xxx" style="zoom:50%;" />
 
-##### 2.7 用你熟悉的IDE(Android Studio 或者 VS Code)打开项目, 连接一台 Android 真机（非模拟器），运行项目
+##### 2.7 用你熟悉的IDE(Android Studio 或者 VS Code)打开项目, 连接一台 Android/IOS 真机（非模拟器），运行项目
 
 ---
 
@@ -88,9 +90,9 @@
 >
 > * enableExtension: 开启/关闭插件
 > * enableAITracking: 开启人脸检测
-> * setComposer: 设置美颜效果
-> * setSticker: 设置猫脸贴纸效果
-> * ENABLELIGHTMAKEUP：开启/关闭轻美妆效果
+> * enableComposer: 设置滤镜效果
+> * enableSticker: 设置猫脸贴纸效果
+
 
 ---
 
@@ -115,6 +117,6 @@
 
 > 方案1：如果您已经在使用声网服务或者在对接中，可以直接联系对接的销售或服务；
 >
-> 方案2：发送邮件给 [support@agora.io](mailto:support@agora.io) 咨询
+> 方案2：在官网右上角提交工单咨询。
 
 ---

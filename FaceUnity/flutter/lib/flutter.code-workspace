@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "flutter",
+			"path": ".."
+		},
+		{
+			"name": "Resource",
+			"path": "../../../../Downloads/Resource"
+		}
+	],
+	"settings": {}
+}

@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.2 <3.0.0'
+  sdk: ">=2.18.2 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -32,12 +32,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  
-  agora_rtc_engine: 6.1.1+1
+
+  agora_rtc_engine: ^6.3.2
   path_provider: ^2.0.11
   permission_handler: ^8.3.0
   path: ^1.8.0
@@ -61,7 +60,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -69,19 +67,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - Resource/graphics/aitype.bundle
-    - Resource/items/ItemSticker/CatSparks.bundle
-    - Resource/model/ai_face_processor.bundle
-    - Resource/model/ai_hand_processor.bundle
-    - Resource/model/ai_human_processor_gpu.bundle
-    - Resource/graphics/face_beautification.bundle
-    - Resource/light_makeup/
-    - Resource/light_makeup/blusher/
-    - Resource/light_makeup/eyebrow/
-    - Resource/light_makeup/eyeshadow/
-    - Resource/light_makeup/eyeliner/
-    - Resource/light_makeup/eyelash/
-    - Resource/light_makeup/lipstick/
+    - Resource/others/
+    - Resource/effect/normal/
+    - Resource/model/
+    - Resource/graphics/
+    - Resource/makeup/combination_bundle/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

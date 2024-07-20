@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:image/image.dart';
-import 'package:tuple/tuple.dart';
+
 import 'authpack.dart' as authpack;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:image/image.dart' as img;
 
-const rtcAppId = '<YOUR_APP_ID>';
-
+const rtcAppId = '<YOUR_APPID>';
 
 // REMINDER: Update this value for ai_face_processor.bundle if the FaceUnity sdk be updated.
 const aiFaceProcessorType = 1 << 8;
@@ -30,17 +26,18 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'fu_v8.11.0 + RTC 4.3.2',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Flutter Demo Home Page'),
+          title: const Text('Hello Cinderella ~'),
+          backgroundColor: Colors.amber,
+          foregroundColor: Colors.white,
         ),
         body: const MyHomePage(),
       ),
@@ -63,8 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isReadyPreview = false;
   bool _enableExtension = false;
   bool _enableAITracking = false;
+  bool _enableSticker = false;
   bool _enableComposer = false;
-  bool _enableLightMarkup = false;
   double _colorLevel = 0.5;
   double _filterLevel = 0.5;
 
@@ -184,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
             {'data': aiHandProcessorPath, 'type': aiHandProcessorType}));
 
     final aiHumanProcessorPath =
-        await _copyAsset('Resource/model/ai_human_processor_gpu.bundle');
+        await _copyAsset('Resource/model/ai_human_processor.bundle');
     await _rtcEngine.setExtensionProperty(
         provider: 'FaceUnity',
         extension: 'Effect',
@@ -192,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
         value: jsonEncode(
             {'data': aiHumanProcessorPath, 'type': aiHumanProcessorType}));
 
-    final aitypePath = await _copyAsset('Resource/graphics/aitype.bundle');
+    final aitypePath = await _copyAsset('Resource/others/aitype.bundle');
     await _rtcEngine.setExtensionProperty(
         provider: 'FaceUnity',
         extension: 'Effect',
@@ -205,230 +202,49 @@ class _MyHomePageState extends State<MyHomePage> {
         value: jsonEncode({
           'obj_handle': aitypePath,
           'name': "aitype",
-          "value": 1 << 8 | 1 << 30 | 1 << 3,
+          "value": 1 << 8 | 16777216 | 1 << 4 | 1 << 9 | 1 << 30 | 1 << 3,
         }));
   }
 
-  Future<void> _setLightMarkup() async {
-    final lightMarkupDir =
-        await _copyAsset("Resource/light_makeup/light_makeup.bundle");
-    const blusherDir = "Resource/light_makeup/blusher/mu_blush_02.png";
-    const eyebrowDir = "Resource/light_makeup/eyebrow/mu_eyebrow_02.png";
-    const eyeShadow = "Resource/light_makeup/eyeshadow/mu_eyeshadow_02.png";
-    const eyeLiner = "Resource/light_makeup/eyeliner/mu_eyeliner_04.png";
-    const eyelash = "Resource/light_makeup/eyelash/mu_eyelash_03.png";
-    const lipstickDir = "Resource/light_makeup/lipstick/mu_lip_01.json";
-
-    final texLoads = [blusherDir, eyebrowDir, eyeShadow, eyeLiner, eyelash];
-
-    final texNames = [
-      "tex_blusher",
-      "tex_brow",
-      "tex_eye",
-      "tex_eyeLiner",
-      "tex_eyeLash"
-    ];
-
-    if (_enableLightMarkup) {
-      const makeup_intensity_lip = 0.9;
-      const makeup_intensity_blusher = 0.9;
-      const makeup_intensity_eyeBrow = 1.0;
-      const makeup_intensity_eye = 1.0;
-      const makeup_intensity_eyeLiner = 1.0;
-      const makeup_intensity_eyelash = 1.0;
-      const int is_use_fix = 1;
-
-      //off
-      final double makeup_intensity_pupil = 0;
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuCreateItemFromPackage',
-          value: jsonEncode({
-            'data': lightMarkupDir,
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "is_makeup_on",
-            'value': 1
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "is_use_fix",
-            'value': is_use_fix,
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity",
-            'value': 1.0
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_eye",
-            'value': makeup_intensity_eye
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_eyeBrow",
-            'value': makeup_intensity_eyeBrow
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_lip",
-            'value': makeup_intensity_lip
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_pupil",
-            'value': makeup_intensity_pupil
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_eyeLiner",
-            'value': makeup_intensity_eyeLiner
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_eyelash",
-            'value': makeup_intensity_eyelash
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_intensity_blusher",
-            'value': makeup_intensity_blusher
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_lip_mask",
-            'value': 1.0
-          }));
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuItemSetParam',
-          value: jsonEncode({
-            'obj_handler': lightMarkupDir,
-            'name': "makeup_lip_color",
-            'value': await _loadJSONFile(lipstickDir),
-          }));
-
-      for (var i = 0; i < texLoads.length; ++i) {
-        final currentFile = texLoads[i];
-        final currentName = texNames[i];
-
-        final img = await _loadPic(currentFile);
-
-        await _rtcEngine.setExtensionProperty(
-            provider: 'FaceUnity',
-            extension: 'Effect',
-            key: 'fuCreateTexForItem',
-            value: jsonEncode({
-              'item': lightMarkupDir,
-              'name': currentName,
-              'value': img.item1,
-              'width': img.item2,
-              'height': img.item3,
-            }));
-      }
-    } else {
-      for (var i = 0; i < texLoads.length; ++i) {
-        final currentName = texNames[i];
-
-        await _rtcEngine.setExtensionProperty(
-            provider: 'FaceUnity',
-            extension: 'Effect',
-            key: 'fuDeleteTexForItem',
-            value: jsonEncode({
-              'item': lightMarkupDir,
-              'name': currentName,
-            }));
-      }
-
-      await _rtcEngine.setExtensionProperty(
-          provider: 'FaceUnity',
-          extension: 'Effect',
-          key: 'fuDestroyItem',
-          value: jsonEncode({
-            'item': lightMarkupDir,
-          }));
-    }
+  Future<void> _enableStickerEffect(String stickerPath) async {
+    final stickerRealPath = await _copyAsset(stickerPath);
+    await _rtcEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuCreateItemFromPackage',
+        value: jsonEncode({'data': stickerRealPath}));
   }
 
-  FutureOr<Tuple3<String, int, int>> _loadPic(String path) async {
-    ByteData bytes = await rootBundle.load(path);
-    img.Image? image = PngDecoder().decode(bytes.buffer.asUint8List());
-
-    return Tuple3<String, int, int>(
-        base64Encode(image!.toUint8List()), image.width, image.height);
+  Future<void> _disableStickerEffect(String stickerPath) async {
+    final stickerRealPath = await _copyAsset(stickerPath);
+    await _rtcEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuDestroyItem',
+        value: jsonEncode({'item': stickerRealPath}));
   }
 
-  Future<dynamic> _loadJSONFile(String path) async {
-    String response = await rootBundle.loadString(path);
-    var ret = await json.decode(response);
-
-    return ret['rgba'];
+  Future<void> _enableComposerEffect(String bundlePath) async {
+    final bundleRealPath = await _copyAsset(bundlePath);
+    await _rtcEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuCreateItemFromPackage',
+        value: jsonEncode({'data': bundleRealPath}));
   }
 
-  Future<void> _setComposerStuff(double colorValue, double filterValue) async {
-    final path =
-        await _copyAsset('Resource/graphics/face_beautification.bundle');
+  Future<void> _disableComposerEffect(String bundlePath) async {
+    final bundleRealPath = await _copyAsset(bundlePath);
+    await _rtcEngine.setExtensionProperty(
+        provider: 'FaceUnity',
+        extension: 'Effect',
+        key: 'fuDestroyItem',
+        value: jsonEncode({'item': bundleRealPath}));
+  }
+
+  Future<void> _setComposerStuff(
+      String bundlePath, double colorValue, double filterValue) async {
+    final path = await _copyAsset(bundlePath);
     await _rtcEngine.setExtensionProperty(
         provider: 'FaceUnity',
         extension: 'Effect',
@@ -436,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
         value: jsonEncode({
           'obj_handle': path,
           'name': "filter_name",
-          'value': "ziran2",
+          'value': "gexing11",
         }));
 
     await _rtcEngine.setExtensionProperty(
@@ -511,8 +327,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            //mainAxisAlignment: MainAxisAlignment.start,
-
             children: [
               _enableAITracking
                   ? Text(
@@ -607,50 +421,44 @@ class _MyHomePageState extends State<MyHomePage> {
                     : 'enableAITracking'),
               ),
               TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.blue),
+                style: TextButton.styleFrom(foregroundColor: Colors.cyan),
                 onPressed: () async {
-                  final catSparksPath = await _copyAsset(
-                      'Resource/items/ItemSticker/CatSparks.bundle');
-                  await _rtcEngine.setExtensionProperty(
-                      provider: 'FaceUnity',
-                      extension: 'Effect',
-                      key: 'fuCreateItemFromPackage',
-                      value: jsonEncode({'data': catSparksPath}));
-                },
-                child: const Text('setSticker'),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.blue),
-                onPressed: () async {
-                  final lightMarkup = await _copyAsset(
-                      'Resource/light_makeup/light_makeup.bundle');
-
                   setState(() {
-                    _enableLightMarkup = !_enableLightMarkup;
+                    _enableSticker = !_enableSticker;
                   });
 
-                  _setLightMarkup();
+                  if (_enableSticker) {
+                    _enableStickerEffect(
+                        'Resource/effect/normal/cat_sparks.bundle');
+                  } else {
+                    _disableStickerEffect(
+                        'Resource/effect/normal/cat_sparks.bundle');
+                  }
                 },
-                child: const Text('setLightMarkup'),
+                child:
+                    Text(_enableSticker ? 'disableSticker' : 'enableSticker'),
               ),
               TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.blue),
+                style: TextButton.styleFrom(foregroundColor: Colors.yellow),
                 onPressed: () async {
-                  final aiBeautificationPath = await _copyAsset(
-                      'Resource/graphics/face_beautification.bundle');
-                  await _rtcEngine.setExtensionProperty(
-                      provider: 'FaceUnity',
-                      extension: 'Effect',
-                      key: 'fuCreateItemFromPackage',
-                      value: jsonEncode({'data': aiBeautificationPath}));
-
                   setState(() {
-                    _enableComposer = true;
+                    _enableComposer = !_enableComposer;
                   });
 
-                  _setComposerStuff(_colorLevel, _filterLevel);
+                  if (_enableComposer) {
+                    _enableComposerEffect(
+                        'Resource/graphics/face_beautification.bundle');
+                    _setComposerStuff(
+                        'Resource/graphics/face_beautification.bundle',
+                        _colorLevel,
+                        _filterLevel);
+                  } else {
+                    _disableComposerEffect(
+                        'Resource/graphics/face_beautification.bundle');
+                  }
                 },
-                child: const Text('setComposer'),
+                child: Text(
+                    _enableComposer ? 'disableComposer' : 'enableComposer'),
               ),
               const Text('Color Level:', textAlign: TextAlign.left),
               Slider(
@@ -661,7 +469,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             _colorLevel = value;
                           });
 
-                          _setComposerStuff(_colorLevel, _filterLevel);
+                          _setComposerStuff(
+                              'Resource/graphics/face_beautification.bundle',
+                              _colorLevel,
+                              _filterLevel);
                         }
                       : null),
               const Text('Filter Level:', textAlign: TextAlign.left),
@@ -673,7 +484,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             _filterLevel = value;
                           });
 
-                          _setComposerStuff(_colorLevel, _filterLevel);
+                          _setComposerStuff(
+                              'Resource/graphics/face_beautification.bundle',
+                              _colorLevel,
+                              _filterLevel);
                         }
                       : null),
             ],
